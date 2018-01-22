@@ -12,7 +12,8 @@ class ViewController: UIViewController {
     
     let allQuestions = QuestionBank() // instead of Question.new to initialize a new Question instance - use the class name and () - if there are parameters, you would add them to the parentheses, in this case QuestionBank has no parameters so we leave () blank 
     
-    let pickedAnswer : Bool = false //initial value of false  - this can be re-assigned to another value later
+    var pickedAnswer : Bool = false //initial value of false  - this can be re-assigned to another value later
+    var questionNumber : Int = 0 // this is a counter variable - it is keeping track of the state of our app
     
     //Place your instance variables here
     
@@ -24,7 +25,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() { // this is the first page of app so we want questions to appear here
         super.viewDidLoad()
         
-        let firstQuestion = allQuestions.list[0]
+        let firstQuestion = allQuestions.list[questionNumber]
         questionLabel.text = firstQuestion.questionText
     }
 
@@ -43,28 +44,39 @@ class ViewController: UIViewController {
             pickedAnswer = false 
         }
         checkAnswer()
+    
+        questionNumber += 1 // same as question = question + 1
+        // questionNumber should increase until it reaches the length of the list array
+        nextQuestion()
+       
     }
     
-    
     func updateUI() {
-      
+      // change label to read "end of quiz"
+        questionLabel.text = "End of Quiz"
     }
     
 
     func nextQuestion() {
-        
+        if questionNumber <= (allQuestions.list.count - 1){
+       questionLabel.text = allQuestions.list[questionNumber].questionText
+        }
+        else {
+            print("End of quiz")
+            questionNumber = 0
+        }
     }
     
     
     func checkAnswer() {
         // iS Question.answer or question.correctAnswer == "true"
         // answerPressed == question.answer
-        let correctAnswer = allQuestions.list[0].answer
+        let correctAnswer = allQuestions.list[questionNumber].answer
         if correctAnswer == pickedAnswer {
             print("You got it!")
         }
         else {
-            
+            print("wrong!")
         }
     }
     
