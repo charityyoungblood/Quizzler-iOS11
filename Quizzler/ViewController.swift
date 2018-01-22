@@ -10,16 +10,20 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    //Place your instance variables here
+    let allQuestions = QuestionBank() // instead of Question.new to initialize a new Question instance - use the class name and () - if there are parameters, you would add them to the parentheses, in this case QuestionBank has no parameters so we leave () blank 
     
+    //Place your instance variables here
     
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet var progressBar: UIView!
     @IBOutlet weak var progressLabel: UILabel!
     
-    override func viewDidLoad() {
+    override func viewDidLoad() { // this is the first page of app so we want questions to appear here
         super.viewDidLoad()
+        
+        let firstQuestion = allQuestions.list[0]
+        questionLabel.text = firstQuestion.questionText
         
     }
 
