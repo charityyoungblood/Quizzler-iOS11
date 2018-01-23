@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     
     var pickedAnswer : Bool = false //initial value of false  - this can be re-assigned to another value later
     var questionNumber : Int = 0 // this is a counter variable - it is keeping track of the state of our app
+    var score : Int = 0 // this keeps track of the score for our app
     
     //Place your instance variables here
     
@@ -25,8 +26,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() { // this is the first page of app so we want questions to appear here
         super.viewDidLoad()
         
-        let firstQuestion = allQuestions.list[questionNumber]
-        questionLabel.text = firstQuestion.questionText
+        nextQuestion()
     }
 
     @IBAction func answerPressed(_ sender: AnyObject) {
@@ -52,37 +52,52 @@ class ViewController: UIViewController {
     }
     
     func updateUI() {
-      // change label to read "end of quiz"
-        questionLabel.text = "End of Quiz"
+        
+        scoreLabel.text = "Score: \(score)"
+        progressLabel.text = "\(questionNumber + 1)/13"
+        progressBar.frame.size.width = (view.frame.size.width / 13) * CGFloat(questionNumber + 1)
     }
     
 
     func nextQuestion() {
         if questionNumber <= (allQuestions.list.count - 1){
-       questionLabel.text = allQuestions.list[questionNumber].questionText
+            questionLabel.text = allQuestions.list[questionNumber].questionText
+            updateUI()
+            
         }
         else {
-            print("End of quiz")
-            questionNumber = 0
+            // create alert to show user the game is over
+            let alert = UIAlertController(title: "Wooo!", message: "You have finished the game. Would you like to play again?", preferredStyle: .alert)
+            // to allow users to restart the quiz - you have to use UIAlertAction
+            let restartAction = UIAlertAction(title: "Restart", style: .default, handler: {(UIAlertAction) in self.startOver()})
+            
+            alert.addAction(restartAction)
+            
+            present(alert, animated: true, completion: nil)
         }
     }
-    
-    
+
     func checkAnswer() {
         // iS Question.answer or question.correctAnswer == "true"
         // answerPressed == question.answer
         let correctAnswer = allQuestions.list[questionNumber].answer
         if correctAnswer == pickedAnswer {
-            print("You got it!")
+            ProgressHUD.showSuccess("Correct!")
+            score += 1
         }
         else {
-            print("wrong!")
+            ProgressHUD.showError("Wrong!")
         }
     }
     
     
     func startOver() {
-       
+        
+        // reset questionNumber to 0
+       questionNumber = 0
+        score = 0 
+        // call nextQuestion() method
+        nextQuestion()
     }
     
 
